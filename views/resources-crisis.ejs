@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/chat.css">
+</head>
+<body class="<%= (theme || 'light') %>-theme">
+    <style>
+        .crisis-card {
+            background: var(--white);
+            border: 3px solid var(--accent-2);
+            border-radius: 25px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .crisis-card h2 {
+            color: var(--accent-2);
+            margin-bottom: 1rem;
+        }
+        
+        .crisis-card p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+        
+        .crisis-btn {
+            background: var(--accent-2);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            margin-top: 1rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .crisis-btn:hover {
+            background: var(--accent-2);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🫧 Mindful Support</h2>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="/dashboard">🏠 Dashboard</a></li>
+                <li><a href="/mood/checkin">😊 Mood Check-in</a></li>
+                <li><a href="/mood/history">📊 Mood History</a></li>
+                <li><a href="/journal">📝 My Journal</a></li>
+                <li><a href="/journal/new">✍️ New Journal Entry</a></li>
+                <li><a href="/resources" class="active">🆘 Resources</a></li>
+                <li><a href="/settings">⚙️ Settings</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="card" style="background: var(--white); border-left: 5px solid var(--accent-2);">
+                <h1>🆘 Crisis Resources</h1>
+                <p style="color: var(--accent-2); font-size: 1.2rem; margin-top: 1rem; font-weight: 600;">
+                    If you're in crisis, please reach out immediately. You are not alone. Your life matters.
+                </p>
+            </div>
+            
+            <% resources.forEach(function(resource) { %>
+                <div class="crisis-card">
+                    <h2><%= resource.title %></h2>
+                    <p><%= resource.description %></p>
+                    <% if (resource.url) { %>
+                        <a href="<%= resource.url %>" class="crisis-btn" target="_blank">
+                            Get Help Now →
+                        </a>
+                    <% } %>
+                </div>
+            <% }); %>
+            
+            <div class="card">
+                <a href="/resources" class="btn btn-secondary">← Back to Resources</a>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Chat Button -->
+    <button id="chat-button" class="chat-button">🫧</button>
+    
+    <!-- Chat Window -->
+    <div id="chat-window" class="chat-window">
+        <div class="chat-header">
+            <h3>🫧 Dodo - Your Wellness Companion</h3>
+            <button id="chat-close" class="chat-close">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="chat-send">Send</button>
+        </div>
+    </div>
+    
+    <script src="/js/chat.js"></script>
+</body>
+</html>

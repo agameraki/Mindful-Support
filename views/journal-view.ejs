@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/chat.css">
+    <style>
+        .journal-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            white-space: pre-wrap;
+        }
+        
+        .journal-header {
+            border-bottom: 3px solid var(--accent-1);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .journal-meta-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .meta-badge {
+            background: var(--bg-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body class="<%= (theme || 'light') %>-theme">
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🫧 Mindful Support</h2>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="/dashboard">🏠 Dashboard</a></li>
+                <li><a href="/mood/checkin">😊 Mood Check-in</a></li>
+                <li><a href="/mood/history">📊 Mood History</a></li>
+                <li><a href="/journal" class="active">📝 My Journal</a></li>
+                <li><a href="/journal/new">✍️ New Journal Entry</a></li>
+                <li><a href="/resources">🆘 Resources</a></li>
+                <li><a href="/settings">⚙️ Settings</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="card">
+                <div class="journal-header">
+                    <h1><%= journal.title %></h1>
+                    
+                    <div class="journal-meta-tags">
+                        <span class="meta-badge">
+                            📅 <%= new Date(journal.created_at).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) %>
+                        </span>
+                        
+                        <% if (journal.mood_score) { %>
+                            <span class="meta-badge">
+                                😊 Mood: <%= journal.mood_score %>/10
+                            </span>
+                        <% } %>
+                        
+                        <% if (journal.tags) { %>
+                            <span class="meta-badge">
+                                🏷️ <%= journal.tags %>
+                            </span>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <div class="journal-content">
+                    <%= journal.content %>
+                </div>
+                
+                <div style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--bg-primary); display: flex; gap: 1rem;">
+                    <a href="/journal" class="btn btn-secondary">← Back to Journal</a>
+                    <a href="/dashboard" class="btn btn-secondary">Dashboard</a>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Chat Button -->
+    <button id="chat-button" class="chat-button">🫧</button>
+    
+    <!-- Chat Window -->
+    <div id="chat-window" class="chat-window">
+        <div class="chat-header">
+            <h3>🫧 Dodo - Your Wellness Companion</h3>
+            <button id="chat-close" class="chat-close">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="chat-send">Send</button>
+        </div>
+    </div>
+    
+    <script src="/js/chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/chat.css">
+    <style>
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+    </style>
+</head>
+<body class="<%= theme %>-theme">
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="user-avatar">
+                    <% if (avatar === 'cat') { %>🐱
+                    <% } else if (avatar === 'dog') { %>🐶
+                    <% } else if (avatar === 'bear') { %>🐻
+                    <% } else if (avatar === 'fox') { %>🦊
+                    <% } else if (avatar === 'rabbit') { %>🐰
+                    <% } else if (avatar === 'panda') { %>🐼
+                    <% } else if (avatar === 'koala') { %>🐨
+                    <% } else if (avatar === 'owl') { %>🦉
+                    <% } else if (avatar === 'penguin') { %>🐧
+                    <% } else if (avatar === 'lion') { %>🦁
+                    <% } else if (avatar === 'tiger') { %>🐯
+                    <% } else if (avatar === 'elephant') { %>🐘
+                    <% } else if (avatar === 'dolphin') { %>🐬
+                    <% } else if (avatar === 'butterfly') { %>🦋
+                    <% } else if (avatar === 'bird') { %>🐦
+                    <% } else if (avatar === 'fish') { %>🐠
+                    <% } else if (avatar === 'turtle') { %>🐢
+                    <% } else if (avatar === 'frog') { %>🐸
+                    <% } else if (avatar === 'bee') { %>🐝
+                    <% } else if (avatar === 'ladybug') { %>🐞
+                    <% } %>
+                </div>
+                <h2>🫧 Mindful Support</h2>
+                <p style="color: #666; font-size: 0.9rem;">Welcome, <%= username %>!</p>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="/dashboard" class="active">🏠 Dashboard</a></li>
+                <li><a href="/mood/checkin">😊 Mood Check-in</a></li>
+                <li><a href="/mood/history">📊 Mood History</a></li>
+                <li><a href="/journal">📝 My Journal</a></li>
+                <li><a href="/journal/new">✍️ New Journal Entry</a></li>
+                <li><a href="/resources">🆘 Resources</a></li>
+                <li><a href="/settings">⚙️ Settings</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="card">
+                <h1>Welcome Back, <%= username %>! 👋</h1>
+                <p style="color: #666; margin-top: 1rem;">How are you feeling today? Let's check in on your wellness journey.</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div class="card" style="text-align: center;">
+                    <h3 style="color: #A8DF8E; margin-bottom: 1rem;">😊 Check-in</h3>
+                    <p>Track your daily mood</p>
+                    <a href="/mood/checkin" class="btn btn-primary" style="margin-top: 1rem;">Check-in Now</a>
+                </div>
+                
+                <div class="card" style="text-align: center;">
+                    <h3 style="color: #FFAAB8; margin-bottom: 1rem;">📝 Journal</h3>
+                    <p>Write your thoughts</p>
+                    <a href="/journal/new" class="btn btn-primary" style="margin-top: 1rem;">Write Entry</a>
+                </div>
+                
+                <div class="card" style="text-align: center;">
+                    <h3 style="color: #A8DF8E; margin-bottom: 1rem;">🆘 Support</h3>
+                    <p>Get help & resources</p>
+                    <a href="/resources" class="btn btn-primary" style="margin-top: 1rem;">View Resources</a>
+                </div>
+            </div>
+            
+            <!-- Inspirational Quote Section -->
+            <div class="card" style="margin-top: 2rem; text-align: center; background: linear-gradient(135deg, #A8DF8E, #FFAAB8); color: white;">
+                <h3 style="margin-bottom: 1rem;">💭 Daily Inspiration</h3>
+                <p id="rotating-quote" style="font-size: 1.2rem; font-style: italic; line-height: 1.6;"></p>
+                <small id="quote-author" style="display: block; margin-top: 1rem; opacity: 0.9;"></small>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Chat Button -->
+    <button id="chat-button" class="chat-button">🫧</button>
+    
+    <!-- Chat Window -->
+    <div id="chat-window" class="chat-window">
+        <div class="chat-header">
+            <h3>🫧 Dodo - Your Wellness Companion</h3>
+            <button id="chat-close" class="chat-close">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="chat-send">Send</button>
+        </div>
+    </div>
+    
+    <script src="/js/chat.js"></script>
+    <script>
+        const quotes = [
+            { text: "You are braver than you believe, stronger than you seem, and smarter than you think.", author: "A.A. Milne" },
+            { text: "Mental health is not a destination, but a process. It's about how you drive, not where you're going.", author: "Noam Shpancer" },
+            { text: "You don't have to be positive all the time. It's perfectly okay to feel sad, angry, annoyed, frustrated, scared and anxious. Having feelings doesn't make you a negative person.", author: "Lori Deschene" },
+            { text: "Healing takes time, and asking for help is a courageous step.", author: "Mariska Hargitay" },
+            { text: "Your mental health is everything – prioritize it. Make the time like your life depends on it, because it does.", author: "Mel Robbins" },
+            { text: "Take a deep breath. It's just a bad day, not a bad life.", author: "Unknown" },
+            { text: "Self-care is how you take your power back.", author: "Lalah Delia" },
+            { text: "You are allowed to be both a masterpiece and a work in progress simultaneously.", author: "Sophia Bush" },
+            { text: "Sometimes the most important thing in a whole day is the rest we take between two deep breaths.", author: "Etty Hillesum" },
+            { text: "Progress, not perfection.", author: "Unknown" },
+            { text: "It's okay to not be okay. What's important is that you're here, trying.", author: "Unknown" },
+            { text: "Be gentle with yourself. You're doing the best you can.", author: "Unknown" }
+        ];
+        
+        let currentQuoteIndex = 0;
+        
+        function displayQuote() {
+            const quote = quotes[currentQuoteIndex];
+            document.getElementById('rotating-quote').textContent = `"${quote.text}"`;
+            document.getElementById('quote-author').textContent = `— ${quote.author}`;
+            currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+        }
+        
+        displayQuote();
+        setInterval(displayQuote, 10000);
+    </script>
+</body>
+</html>

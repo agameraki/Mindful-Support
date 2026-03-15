@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/chat.css">
+</head>
+<body class="<%= (theme || 'light') %>-theme">
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🫧 Mindful Support</h2>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="/dashboard">🏠 Dashboard</a></li>
+                <li><a href="/mood/checkin">😊 Mood Check-in</a></li>
+                <li><a href="/mood/history">📊 Mood History</a></li>
+                <li><a href="/journal">📝 My Journal</a></li>
+                <li><a href="/journal/new" class="active">✍️ New Journal Entry</a></li>
+                <li><a href="/resources">🆘 Resources</a></li>
+                <li><a href="/settings">⚙️ Settings</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="card">
+                <h1>✍️ New Journal Entry</h1>
+                <p style="color: #666; margin-top: 0.5rem;">Take your time. Write from the heart.</p>
+            </div>
+            
+            <% if (error) { %>
+                <div class="card" style="background: #ffebee; border-left: 4px solid #f44336;">
+                    <p style="color: #c62828; margin: 0;"><%= error %></p>
+                </div>
+            <% } %>
+            
+            <div class="card">
+                <form method="POST" action="/journal/new">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" name="title" placeholder="Give your entry a title..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Your Thoughts</label>
+                        <textarea name="content" rows="12" placeholder="What's on your mind today?&#10;&#10;Write freely... no judgment here." required></textarea>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Mood (Optional)</label>
+                            <input type="number" name="mood_score" min="1" max="10" placeholder="1-10">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Tags (Optional)</label>
+                            <input type="text" name="tags" placeholder="gratitude, reflection, goals">
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">
+                            Save Entry
+                        </button>
+                        <a href="/journal" class="btn btn-secondary" style="flex: 0;">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Chat Button -->
+    <button id="chat-button" class="chat-button">🫧</button>
+    
+    <!-- Chat Window -->
+    <div id="chat-window" class="chat-window">
+        <div class="chat-header">
+            <h3>🫧 Dodo - Your Wellness Companion</h3>
+            <button id="chat-close" class="chat-close">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="chat-send">Send</button>
+        </div>
+    </div>
+    
+    <script src="/js/chat.js"></script>
+</body>
+</html>

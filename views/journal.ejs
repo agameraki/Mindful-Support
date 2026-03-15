@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/chat.css">
+    <style>
+        .journal-entry {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--accent-1);
+        }
+        
+        .journal-entry:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateX(5px);
+        }
+        
+        .journal-entry h3 {
+            color: var(--accent-1);
+            margin-bottom: 0.5rem;
+        }
+        
+        .journal-entry p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        .journal-meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body class="<%= (theme || 'light') %>-theme">
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🫧 Mindful Support</h2>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="/dashboard">🏠 Dashboard</a></li>
+                <li><a href="/mood/checkin">😊 Mood Check-in</a></li>
+                <li><a href="/mood/history">📊 Mood History</a></li>
+                <li><a href="/journal" class="active">📝 My Journal</a></li>
+                <li><a href="/journal/new">✍️ New Journal Entry</a></li>
+                <li><a href="/resources">🆘 Resources</a></li>
+                <li><a href="/settings">⚙️ Settings</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1>📝 My Journal</h1>
+                        <p style="color: #666; margin-top: 0.5rem;">Your personal space for thoughts and reflections</p>
+                    </div>
+                    <a href="/journal/new" class="btn btn-primary">✍️ Write New Entry</a>
+                </div>
+            </div>
+            
+            <% if (journals.length === 0) { %>
+                <div class="card" style="text-align: center; padding: 3rem;">
+                    <h2 style="color: #999;">No journal entries yet</h2>
+                    <p style="color: #999; margin: 1rem 0;">Start writing to capture your thoughts and feelings</p>
+                    <a href="/journal/new" class="btn btn-primary" style="margin-top: 1rem;">Write Your First Entry</a>
+                </div>
+            <% } else { %>
+                <% journals.forEach(function(journal) { %>
+                    <div class="journal-entry">
+                        <h3><a href="/journal/<%= journal.id %>" style="text-decoration: none; color: inherit;"><%= journal.title %></a></h3>
+                        <p><%= journal.content.substring(0, 200) %>...</p>
+                        <div class="journal-meta">
+                            <span>📅 <%= new Date(journal.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
+                            <% if (journal.mood_score) { %>
+                                <span>😊 Mood: <%= journal.mood_score %>/10</span>
+                            <% } %>
+                            <% if (journal.tags) { %>
+                                <span>🏷️ <%= journal.tags %></span>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } %>
+        </main>
+    </div>
+    
+    <!-- Chat Button -->
+    <button id="chat-button" class="chat-button">🫧</button>
+    
+    <!-- Chat Window -->
+    <div id="chat-window" class="chat-window">
+        <div class="chat-header">
+            <h3>🫧 Dodo - Your Wellness Companion</h3>
+            <button id="chat-close" class="chat-close">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="chat-send">Send</button>
+        </div>
+    </div>
+    
+    <script src="/js/chat.js"></script>
+</body>
+</html>

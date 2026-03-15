@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/chat.css">
+</head>
+<body class="<%= (theme || 'light') %>-theme">
+    <style>
+        .meditation-card {
+            background: var(--white);
+            border: 3px solid var(--accent-1);
+            border-radius: 25px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .meditation-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+        
+        .meditation-card h2 {
+            color: var(--accent-1);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .meditation-card p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .practice-box {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 1rem;
+            border-left: 4px solid var(--accent-1);
+            color: var(--text-dark);
+        }
+        
+        .meditation-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: var(--accent-1);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🫧 Mindful Support</h2>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="/dashboard">🏠 Dashboard</a></li>
+                <li><a href="/mood/checkin">😊 Mood Check-in</a></li>
+                <li><a href="/mood/history">📊 Mood History</a></li>
+                <li><a href="/journal">📝 My Journal</a></li>
+                <li><a href="/journal/new">✍️ New Journal Entry</a></li>
+                <li><a href="/resources" class="active">🆘 Resources</a></li>
+                <li><a href="/settings">⚙️ Settings</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="card" style="background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: white;">
+                <h1>🧘 Meditation Practices</h1>
+                <p style="font-size: 1.1rem; margin-top: 1rem; color: white;">
+                    Find peace and calm your mind with these guided meditation practices. Start your journey to mindfulness.
+                </p>
+            </div>
+            
+            <% if (resources.length === 0) { %>
+                <div class="card" style="text-align: center; padding: 3rem; color: var(--text-dark);">
+                    <h2 style="color: #999;">No meditation resources available yet</h2>
+                    <a href="/resources" class="btn btn-secondary" style="margin-top: 1rem;">← Back to Resources</a>
+                </div>
+            <% } else { %>
+                <% resources.forEach(function(resource, index) { %>
+                    <div class="meditation-card">
+                        <h2><span class="meditation-number"><%= index + 1 %></span><%= resource.title %></h2>
+                        <p style="font-style: italic; color: var(--accent-1);"><%= resource.description %></p>
+                        
+                        <% if (resource.content) { %>
+                            <div class="practice-box">
+                                <%= resource.content %>
+                            </div>
+                        <% } %>
+                    </div>
+                <% }); %>
+            <% } %>
+            
+            <div class="card">
+                <a href="/resources" class="btn btn-secondary">← Back to Resources</a>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Chat Button -->
+    <button id="chat-button" class="chat-button">🫧</button>
+    
+    <!-- Chat Window -->
+    <div id="chat-window" class="chat-window">
+        <div class="chat-header">
+            <h3>🫧 Dodo - Your Wellness Companion</h3>
+            <button id="chat-close" class="chat-close">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="chat-send">Send</button>
+        </div>
+    </div>
+    
+    <script src="/js/chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/chat.css">
+    <style>
+        .resource-card {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+            border: 3px solid transparent;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .resource-card.crisis {
+            border-color: #ff6b6b;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe0e0 100%);
+        }
+        
+        .resource-card.breathing {
+            border-color: #4dabf7;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+        
+        .resource-card.meditation {
+            border-color: #9775fa;
+            background: linear-gradient(135deg, #f8f0ff 0%, #ede0ff 100%);
+        }
+        
+        .resource-card h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .resource-card p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body class="<%= (theme || 'light') %>-theme">
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🫧 Mindful Support</h2>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="/dashboard">🏠 Dashboard</a></li>
+                <li><a href="/mood/checkin">😊 Mood Check-in</a></li>
+                <li><a href="/mood/history">📊 Mood History</a></li>
+                <li><a href="/journal">📝 My Journal</a></li>
+                <li><a href="/journal/new">✍️ New Journal Entry</a></li>
+                <li><a href="/resources" class="active">🆘 Resources</a></li>
+                <li><a href="/settings">⚙️ Settings</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="card">
+                <h1>🆘 Resources & Support</h1>
+                <p style="color: #666; margin-top: 0.5rem;">Choose a category to explore helpful resources</p>
+            </div>
+            
+            <div style="display: grid; gap: 2rem; margin-top: 2rem;">
+                <a href="/resources/crisis" class="resource-card crisis">
+                    <h2>🆘 Crisis Resources</h2>
+                    <p>Immediate help available 24/7 - You are not alone</p>
+                </a>
+                
+                <a href="/resources/breathing" class="resource-card breathing">
+                    <h2>🌬️ Breathing Exercises</h2>
+                    <p>15 calming techniques to reduce stress and anxiety</p>
+                </a>
+                
+                <a href="/resources/meditation" class="resource-card meditation">
+                    <h2>🧘 Meditation Practices</h2>
+                    <p>15 guided practices for peace and mindfulness</p>
+                </a>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Chat Button -->
+    <button id="chat-button" class="chat-button">🫧</button>
+    
+    <!-- Chat Window -->
+    <div id="chat-window" class="chat-window">
+        <div class="chat-header">
+            <h3>🫧 Dodo - Your Wellness Companion</h3>
+            <button id="chat-close" class="chat-close">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="chat-send">Send</button>
+        </div>
+    </div>
+    
+    <script src="/js/chat.js"></script>
+</body>
+</html>

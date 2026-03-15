@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/chat.css">
+</head>
+<body class="<%= (theme || 'light') %>-theme">
+    <style>
+        .breathing-card {
+            background: var(--white);
+            border: 3px solid var(--accent-2);
+            border-radius: 25px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .breathing-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+        
+        .breathing-card h2 {
+            color: var(--accent-2);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .breathing-card p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .steps-box {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 1rem;
+            border-left: 4px solid var(--accent-2);
+            color: var(--text-dark);
+        }
+        
+        .breathing-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: var(--accent-2);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🫧 Mindful Support</h2>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="/dashboard">🏠 Dashboard</a></li>
+                <li><a href="/mood/checkin">😊 Mood Check-in</a></li>
+                <li><a href="/mood/history">📊 Mood History</a></li>
+                <li><a href="/journal">📝 My Journal</a></li>
+                <li><a href="/journal/new">✍️ New Journal Entry</a></li>
+                <li><a href="/resources" class="active">🆘 Resources</a></li>
+                <li><a href="/settings">⚙️ Settings</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="card" style="background: linear-gradient(135deg, var(--accent-2), var(--accent-1)); color: white;">
+                <h1>🌬️ Breathing Exercises</h1>
+                <p style="font-size: 1.1rem; margin-top: 1rem; color: white;">
+                    Take a moment to breathe. These exercises can help reduce stress and anxiety in just a few minutes.
+                </p>
+            </div>
+            
+            <% resources.forEach(function(resource, index) { %>
+                <div class="breathing-card">
+                    <h2><span class="breathing-number"><%= index + 1 %></span><%= resource.title %></h2>
+                    <p style="font-style: italic; color: var(--accent-2);"><%= resource.description %></p>
+                    
+                    <% if (resource.content) { %>
+                        <div class="steps-box">
+                            <%= resource.content %>
+                        </div>
+                    <% } %>
+                </div>
+            <% }); %>
+            
+            <div class="card">
+                <a href="/resources" class="btn btn-secondary">← Back to Resources</a>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Chat Button -->
+    <button id="chat-button" class="chat-button">🫧</button>
+    
+    <!-- Chat Window -->
+    <div id="chat-window" class="chat-window">
+        <div class="chat-header">
+            <h3>🫧 Dodo - Your Wellness Companion</h3>
+            <button id="chat-close" class="chat-close">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="chat-send">Send</button>
+        </div>
+    </div>
+    
+    <script src="/js/chat.js"></script>
+</body>
+</html>

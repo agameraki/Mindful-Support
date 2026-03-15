@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/chat.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="<%= (theme || 'light') %>-theme">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #A8DF8E, #FFAAB8);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        th:first-child {
+            border-radius: 15px 0 0 0;
+        }
+        
+        th:last-child {
+            border-radius: 0 15px 0 0;
+        }
+        
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .mood-score {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .mood-low {
+            background: #ff6b6b;
+        }
+        
+        .mood-medium {
+            background: #ffd93d;
+            color: #333;
+        }
+        
+        .mood-high {
+            background: #6bcf7f;
+        }
+        
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .chart-card h3 {
+            color: var(--accent-1);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🫧 Mindful Support</h2>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="/dashboard">🏠 Dashboard</a></li>
+                <li><a href="/mood/checkin">😊 Mood Check-in</a></li>
+                <li><a href="/mood/history" class="active">📊 Mood History</a></li>
+                <li><a href="/journal">📝 My Journal</a></li>
+                <li><a href="/journal/new">✍️ New Journal Entry</a></li>
+                <li><a href="/resources">🆘 Resources</a></li>
+                <li><a href="/settings">⚙️ Settings</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="card">
+                <h1>📊 Your Mood History</h1>
+                <p style="color: #666; margin-top: 0.5rem;">Track your emotional journey over time</p>
+            </div>
+            
+            <% if (moodHistory.length > 0) { %>
+                <div class="charts-container">
+                    <!-- Weekly Trend Chart -->
+                    <div class="chart-card">
+                        <h3>📈 Weekly Mood Trend</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="moodTrendChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Mood Distribution Chart -->
+                    <div class="chart-card">
+                        <h3>🎯 Mood Distribution</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="moodDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+            
+            <div class="card">
+                <% if (moodHistory.length === 0) { %>
+                    <div style="text-align: center; padding: 3rem;">
+                        <h2 style="color: #999;">No mood entries yet</h2>
+                        <p style="color: #999; margin: 1rem 0;">Start tracking your mood to see patterns and insights</p>
+                        <a href="/mood/checkin" class="btn btn-primary" style="margin-top: 1rem;">Check-in Now</a>
+                    </div>
+                <% } else { %>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Mood Score</th>
+                                <th>Emotions</th>
+                                <th>Triggers</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% moodHistory.forEach(function(entry) { 
+                                let moodClass = 'mood-medium';
+                                if (entry.mood_score <= 4) moodClass = 'mood-low';
+                                if (entry.mood_score >= 7) moodClass = 'mood-high';
+                            %>
+                                <tr>
+                                    <td><%= new Date(entry.entry_date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) %></td>
+                                    <td>
+                                        <span class="mood-score <%= moodClass %>">
+                                            <%= entry.mood_score %>/10
+                                        </span>
+                                    </td>
+                                    <td><%= entry.emotions || '—' %></td>
+                                    <td><%= entry.triggers || '—' %></td>
+                                    <td><%= entry.notes ? (entry.notes.substring(0, 50) + '...') : '—' %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                <% } %>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Chat Button -->
+    <button id="chat-button" class="chat-button">🫧</button>
+    
+    <!-- Chat Window -->
+    <div id="chat-window" class="chat-window">
+        <div class="chat-header">
+            <h3>🫧 Dodo - Your Wellness Companion</h3>
+            <button id="chat-close" class="chat-close">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="chat-send">Send</button>
+        </div>
+    </div>
+    
+    <script src="/js/chat.js"></script>
+    
+    <script>
+        // Get theme colors
+        const isDarkMode = document.body.classList.contains('dark-theme');
+        const textColor = isDarkMode ? '#CCCCCC' : '#333333';
+        const gridColor = isDarkMode ? '#444444' : '#e0e0e0';
+        const accentColor = isDarkMode ? '#A64D79' : '#FFAAB8';
+        const accentColor2 = isDarkMode ? '#6A1E55' : '#A8DF8E';
+        
+        // Process mood history data
+        const moodHistory = <%- JSON.stringify(moodHistory) %>;
+        
+        if (moodHistory.length > 0) {
+            // Prepare data for weekly trend
+            const last7Days = [];
+            const today = new Date();
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                last7Days.push({
+                    date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                    score: null
+                });
+            }
+            
+            // Map mood history to last 7 days
+            moodHistory.forEach(entry => {
+                const entryDate = new Date(entry.entry_date);
+                const dayOfWeek = entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const found = last7Days.find(d => d.date === dayOfWeek);
+                if (found) {
+                    found.score = entry.mood_score;
+                }
+            });
+            
+            // Weekly Trend Chart
+            const trendCtx = document.getElementById('moodTrendChart').getContext('2d');
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: last7Days.map(d => d.date),
+                    datasets: [{
+                        label: 'Mood Score',
+                        data: last7Days.map(d => d.score),
+                        borderColor: accentColor,
+                        backgroundColor: isDarkMode ? 'rgba(166, 77, 121, 0.1)' : 'rgba(255, 170, 184, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 6,
+                        pointBackgroundColor: accentColor,
+                        pointBorderColor: isDarkMode ? '#1A1A1D' : '#FFFFFF',
+                        pointBorderWidth: 2,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                color: textColor,
+                                font: { size: 12, weight: 'bold' }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            ticks: {
+                                color: textColor,
+                                stepSize: 2
+                            },
+                            grid: {
+                                color: gridColor,
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: textColor
+                            },
+                            grid: {
+                                color: gridColor,
+                                drawBorder: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Mood Distribution Chart
+            const moodCounts = {
+                'Low (1-4)': moodHistory.filter(e => e.mood_score <= 4).length,
+                'Medium (5-6)': moodHistory.filter(e => e.mood_score >= 5 && e.mood_score <= 6).length,
+                'High (7-10)': moodHistory.filter(e => e.mood_score >= 7).length
+            };
+            
+            const distributionCtx = document.getElementById('moodDistributionChart').getContext('2d');
+            new Chart(distributionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(moodCounts),
+                    datasets: [{
+                        data: Object.values(moodCounts),
+                        backgroundColor: [
+                            '#ff6b6b',
+                            '#ffd93d',
+                            '#6bcf7f'
+                        ],
+                        borderColor: isDarkMode ? '#1A1A1D' : '#FFFFFF',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: textColor,
+                                font: { size: 12, weight: 'bold' },
+                                padding: 15
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
