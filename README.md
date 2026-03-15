@@ -74,8 +74,8 @@ The platform provides curated mental wellness resources including:
 
 🔗 **Live Project:** *(Add your deployed link here)*
 
-Example:
-https://mindful-support.onrender.com
+https://mindful-support-j0io.onrender.com
+
 
 ---
 
